@@ -9,6 +9,7 @@ import net.minecraft.util.EnumMovingObjectType;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 
+import org.lo.d.commons.coords.EntityPoint3DDouble;
 import org.lo.d.commons.coords.Point3D;
 
 public class MasterLookingDoorOpenStrategy extends DoorActivateStrategy.Impl {
@@ -24,7 +25,7 @@ public class MasterLookingDoorOpenStrategy extends DoorActivateStrategy.Impl {
 		LMM_EntityLittleMaid maid = doorKeeper.owner;
 		Point3D mstLookAtPos = getBlockPositionMasterLookAt();
 		if (mstLookAtPos != null) {
-			double distanceSq = mstLookAtPos.distanceToSq(maid.mstatMasterEntity.getPosition(1.0f));
+			double distanceSq = mstLookAtPos.distanceToSq(new EntityPoint3DDouble(maid.mstatMasterEntity));
 			if (distanceSq <= distToOpen) {
 				int px = mstLookAtPos.getX();
 				int py = mstLookAtPos.getY();
@@ -44,6 +45,9 @@ public class MasterLookingDoorOpenStrategy extends DoorActivateStrategy.Impl {
 
 	private Point3D getBlockPositionMasterLookAt() {
 		EntityPlayer player = doorKeeper.owner.mstatMasterEntity;
+		if (player == null) {
+			return null;
+		}
 		MovingObjectPosition mop;
 		{
 			float rpt = 1.0f;
@@ -68,7 +72,7 @@ public class MasterLookingDoorOpenStrategy extends DoorActivateStrategy.Impl {
 			return false;
 		}
 		Point3D checkPos = new Point3D(px, py, pz);
-		double distanceSq = checkPos.distanceToSq(maid.mstatMasterEntity.getPosition(1.0f));
+		double distanceSq = checkPos.distanceToSq(new EntityPoint3DDouble(maid.mstatMasterEntity));
 
 		BlockDoor door = (BlockDoor) Block.doorWood;
 		if (distanceSq <= distToOpen) {

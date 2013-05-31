@@ -22,6 +22,10 @@ public class StrategyUserHelper<S extends Strategy> {
 		return currentStrategy != null ? currentStrategy : defaultStrategy;
 	}
 
+	public Iterable<S> getStrategies() {
+		return strategies;
+	}
+
 	public boolean updateCurrentStrategy() {
 		boolean onChange = false;
 		S newStrategy = defaultStrategy;
@@ -35,9 +39,10 @@ public class StrategyUserHelper<S extends Strategy> {
 			currentStrategy.stopStrategy();
 			currentStrategy.onChangeStrategy();
 			currentStrategy = newStrategy;
+			newStrategy.startStrategy();
 			onChange = true;
 		}
-
+		onChange = onChange | currentStrategy.onCurrentStrategyUpdate();
 		return onChange;
 	}
 }

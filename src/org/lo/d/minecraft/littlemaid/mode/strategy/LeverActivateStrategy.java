@@ -8,11 +8,13 @@ import net.minecraft.src.LMM_EntityLittleMaid;
 import net.minecraft.src.LMM_EntityMode_DoorKeeper;
 
 import org.lo.d.commons.coords.Point3D;
+import org.lo.d.minecraft.littlemaid.mode.LMMModeExHandler.TaskState;
 
 import com.google.common.collect.Sets;
 
 public interface LeverActivateStrategy extends Strategy {
-	public abstract class Impl implements LeverActivateStrategy {
+
+	public abstract class Impl extends Strategy.DefaultImpl implements LeverActivateStrategy {
 		protected final LMM_EntityMode_DoorKeeper doorKeeper;
 
 		protected Point3D target = null;
@@ -46,6 +48,11 @@ public interface LeverActivateStrategy extends Strategy {
 				return true;
 			}
 			return false;
+		}
+
+		@Override
+		public TaskState handleHealthUpdate(LMM_EntityLittleMaid maid, int maidMode, byte par1) {
+			return null;
 		}
 
 		@Override
@@ -106,6 +113,8 @@ public interface LeverActivateStrategy extends Strategy {
 	public boolean checkBlock(int pMode, int px, int py, int pz);
 
 	public boolean executeBlock(int pMode, int px, int py, int pz);
+
+	public TaskState handleHealthUpdate(LMM_EntityLittleMaid maid, int maidMode, byte par1);
 
 	public void updateTask(LMM_EntityLittleMaid maid, int maidMode);
 }

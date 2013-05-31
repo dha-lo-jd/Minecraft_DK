@@ -5,6 +5,7 @@ import net.minecraft.block.BlockDoor;
 import net.minecraft.src.LMM_EntityLittleMaid;
 import net.minecraft.src.LMM_EntityMode_DoorKeeper;
 
+import org.lo.d.commons.coords.EntityPoint3DDouble;
 import org.lo.d.commons.coords.Point3D;
 
 public class DoorCloseStrategy extends DoorActivateStrategy.Impl {
@@ -33,7 +34,7 @@ public class DoorCloseStrategy extends DoorActivateStrategy.Impl {
 		}
 
 		Point3D checkPos = new Point3D(px, py, pz);
-		double distanceSq = checkPos.distanceToSq(maid.mstatMasterEntity.getPosition(1.0f));
+		double distanceSq = checkPos.distanceToSq(new EntityPoint3DDouble(maid.mstatMasterEntity));
 
 		BlockDoor door = (BlockDoor) Block.doorWood;
 		if (distanceSq > distToClose) {

@@ -3,17 +3,14 @@ package org.lo.d.minecraft.littlemaid.mode.strategy;
 import net.minecraft.src.LMM_EntityLittleMaid;
 import net.minecraft.src.LMM_EntityMode_DoorKeeper;
 
-public class FreedomDKDelegate implements Strategy, DKDelegate {
+import org.lo.d.minecraft.littlemaid.mode.LMMModeExHandler.TaskState;
 
-	private final LMM_EntityMode_DoorKeeper mode;
-
-	public final StrategyUserHelper<LeverActivateStrategy> helper;
+public class FreedomDKDelegate extends DKDelegate.Impl<LeverActivateStrategy> implements DKDelegate {
 
 	public FreedomDKDelegate(LMM_EntityMode_DoorKeeper mode) {
-		super();
-		this.mode = mode;
-		helper = new StrategyUserHelper<>(new LeverOffStrategy(mode));
+		super(mode, new DefaultLeverActivateStrategy(mode));
 		helper.add(new LeverOnStrategy(mode));
+		helper.add(new LeverOffStrategy(mode));
 	}
 
 	@Override
@@ -27,7 +24,13 @@ public class FreedomDKDelegate implements Strategy, DKDelegate {
 	}
 
 	@Override
-	public void onChangeStrategy() {
+	public TaskState handleHealthUpdate(LMM_EntityLittleMaid maid, int maidMode, byte par1) {
+		for (LeverActivateStrategy strategy : helper.getStrategies()) {
+			if (strategy.handleHealthUpdate(maid, maidMode, par1) == TaskState.BREAK) {
+				return TaskState.BREAK;
+			}
+		}
+		return TaskState.CONTINUE;
 	}
 
 	@Override
@@ -36,22 +39,8 @@ public class FreedomDKDelegate implements Strategy, DKDelegate {
 	}
 
 	@Override
-	public void stopStrategy() {
-		getCurrentStrategy().stopStrategy();
-	}
-
-	@Override
-	public boolean updateCurrentStrategy() {
-		return helper.updateCurrentStrategy();
-	}
-
-	@Override
 	public void updateTask(LMM_EntityLittleMaid maid, int maidMode) {
 		getCurrentStrategy().updateTask(maid, maidMode);
-	}
-
-	private LeverActivateStrategy getCurrentStrategy() {
-		return helper.getCurrentStrategy();
 	}
 
 }
