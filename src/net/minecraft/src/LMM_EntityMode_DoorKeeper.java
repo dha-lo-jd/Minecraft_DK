@@ -14,7 +14,7 @@ import org.lo.d.minecraft.littlemaid.mode.LMM_EntityModeBaseEx;
 import org.lo.d.minecraft.littlemaid.mode.strategy.DKDelegate;
 import org.lo.d.minecraft.littlemaid.mode.strategy.FreedomDKDelegate;
 import org.lo.d.minecraft.littlemaid.mode.strategy.StrategyUserHelper;
-import org.lo.d.minecraft.littlemaid.mode.strategy.TracerDKDelegate;
+import org.lo.d.minecraft.littlemaid.mode.strategy.EscorterDKDelegate;
 
 import com.google.common.collect.Lists;
 
@@ -33,13 +33,12 @@ public class LMM_EntityMode_DoorKeeper extends LMM_EntityModeBaseEx {
 
 	public LMM_EntityMode_DoorKeeper(LMM_EntityLittleMaid pEntity) {
 		super(pEntity);
-		helper = new StrategyUserHelper<>(new TracerDKDelegate(this));
+		helper = new StrategyUserHelper<>(new EscorterDKDelegate(this));
 		helper.add(new FreedomDKDelegate(this));
 	}
 
 	@Override
 	public void addEntityMode(EntityAITasks pDefaultMove, EntityAITasks pDefaultTargeting) {
-		// Healer:0x0082
 		EntityAITasks[] ltasks = new EntityAITasks[2];
 		ltasks[0] = new EntityAITasks(owner.aiProfiler);
 		@SuppressWarnings("unchecked")

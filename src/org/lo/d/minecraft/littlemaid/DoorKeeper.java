@@ -2,6 +2,8 @@ package org.lo.d.minecraft.littlemaid;
 
 import java.lang.reflect.InvocationTargetException;
 
+import net.minecraftforge.common.Configuration;
+
 import org.lo.d.commons.configuration.ConfigurationSupport;
 import org.lo.d.commons.configuration.ConfigurationSupport.IntConfig;
 
@@ -20,6 +22,9 @@ public class DoorKeeper {
 	@Mod.PreInit
 	public void preInit(FMLPreInitializationEvent event) throws IllegalArgumentException, IllegalAccessException,
 			InvocationTargetException {
-		ConfigurationSupport.load(getClass(), event);
+		Configuration config = new Configuration(event.getSuggestedConfigurationFile());
+		config.load();
+		ConfigurationSupport.load(getClass(), event, config);
+		config.save();
 	}
 }

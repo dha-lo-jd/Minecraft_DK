@@ -3,9 +3,9 @@ package org.lo.d.minecraft.littlemaid.mode.strategy;
 import net.minecraft.src.LMM_EntityLittleMaid;
 import net.minecraft.src.LMM_EntityMode_DoorKeeper;
 
-public class TracerDKDelegate extends DKDelegate.Impl<DoorActivateStrategy> implements DKDelegate {
+public class EscorterDKDelegate extends DKDelegate.Impl<DoorActivateStrategy> implements DKDelegate {
 
-	public TracerDKDelegate(LMM_EntityMode_DoorKeeper mode) {
+	public EscorterDKDelegate(LMM_EntityMode_DoorKeeper mode) {
 		super(mode, new DoorCloseStrategy(mode));
 		helper.add(new MasterLookingDoorOpenStrategy(mode));
 	}
@@ -22,7 +22,7 @@ public class TracerDKDelegate extends DKDelegate.Impl<DoorActivateStrategy> impl
 
 	@Override
 	public boolean shouldStrategy() {
-		return mode.owner.isTracer();
+		return !mode.owner.isMaidWait() && !mode.owner.isFreedom();
 	}
 
 	@Override
