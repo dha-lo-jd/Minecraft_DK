@@ -11,9 +11,9 @@ public interface DKDelegate extends Strategy {
 
 		public final StrategyUserHelper<T> helper;
 
-		public Impl(LMM_EntityMode_DoorKeeper mode, T defaultStratey) {
+		public Impl(LMM_EntityMode_DoorKeeper mode, StrategyUserHelper<T> subHelper) {
 			this.mode = mode;
-			helper = new StrategyUserHelper<>(defaultStratey);
+			helper = subHelper;
 		}
 
 		@Override
@@ -26,42 +26,17 @@ public interface DKDelegate extends Strategy {
 			return false;
 		}
 
+		public T getCurrentStrategy() {
+			return helper.getCurrentStrategy();
+		}
+
 		@Override
 		public TaskState handleHealthUpdate(LMM_EntityLittleMaid maid, int maidMode, byte par1) {
 			return null;
 		}
 
 		@Override
-		public boolean onCurrentStrategyUpdate() {
-			return updateCurrentStrategy();
-		}
-
-		@Override
-		public void onUpdateStrategy() {
-			helper.getCurrentStrategy().onUpdateStrategy();
-		}
-
-		@Override
-		public void startStrategy() {
-			getCurrentStrategy().startStrategy();
-		}
-
-		@Override
-		public void stopStrategy() {
-			getCurrentStrategy().stopStrategy();
-		}
-
-		@Override
-		public boolean updateCurrentStrategy() {
-			return helper.updateCurrentStrategy();
-		}
-
-		@Override
 		public void updateTask(LMM_EntityLittleMaid maid, int maidMode) {
-		}
-
-		protected T getCurrentStrategy() {
-			return helper.getCurrentStrategy();
 		}
 
 	}
@@ -71,8 +46,6 @@ public interface DKDelegate extends Strategy {
 	public abstract boolean executeBlock(int pMode, int px, int py, int pz);
 
 	public TaskState handleHealthUpdate(LMM_EntityLittleMaid maid, int maidMode, byte par1);
-
-	public abstract boolean updateCurrentStrategy();
 
 	public abstract void updateTask(LMM_EntityLittleMaid maid, int maidMode);
 

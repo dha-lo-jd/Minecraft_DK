@@ -9,12 +9,21 @@ import net.minecraft.item.ItemPotion;
 import net.minecraft.item.ItemStack;
 import net.minecraft.src.LMM_EntityMode_AcceptBookCommand.ModeAlias;
 
+import org.lo.d.minecraft.littlemaid.LittleMaidModeConfiguration;
 import org.lo.d.minecraft.littlemaid.entity.ai.EntityAIFindBlockEx;
 import org.lo.d.minecraft.littlemaid.mode.LMM_EntityModeBaseEx;
 import org.lo.d.minecraft.littlemaid.mode.strategy.DKDelegate;
-import org.lo.d.minecraft.littlemaid.mode.strategy.FreedomDKDelegate;
-import org.lo.d.minecraft.littlemaid.mode.strategy.StrategyUserHelper;
+import org.lo.d.minecraft.littlemaid.mode.strategy.DefaultLeverActivateStrategy;
+import org.lo.d.minecraft.littlemaid.mode.strategy.DoorActivateStrategy;
+import org.lo.d.minecraft.littlemaid.mode.strategy.DoorCloseStrategy;
 import org.lo.d.minecraft.littlemaid.mode.strategy.EscorterDKDelegate;
+import org.lo.d.minecraft.littlemaid.mode.strategy.FreedomDKDelegate;
+import org.lo.d.minecraft.littlemaid.mode.strategy.LeverActivateStrategy;
+import org.lo.d.minecraft.littlemaid.mode.strategy.LeverOffStrategy;
+import org.lo.d.minecraft.littlemaid.mode.strategy.LeverOnStrategy;
+import org.lo.d.minecraft.littlemaid.mode.strategy.MasterLookingDoorOpenStrategy;
+import org.lo.d.minecraft.littlemaid.mode.strategy.StrategyUserHelper;
+import org.lo.d.minecraft.littlemaid.mode.strategy.StrategyUserHelperSet;
 
 import com.google.common.collect.Lists;
 
@@ -23,18 +32,35 @@ public class LMM_EntityMode_DoorKeeper extends LMM_EntityModeBaseEx {
 		TO_OPEN, TO_CLOSE, WAIT,
 	}
 
-	public static final int MODE_ID = 0x0203;
-
 	public static final String MODE_NAME = "DoorKeeper";
 
-	public final StrategyUserHelper<DKDelegate> helper;
+	@LittleMaidModeConfiguration.ResolveModeId(modeName = MODE_NAME)
+	public static int MODE_ID = 0x0203;
 
-	private boolean strategyChanged = false;
+	public final StrategyUserHelper<DKDelegate> helper;
+	public final StrategyUserHelperSet helpers;
 
 	public LMM_EntityMode_DoorKeeper(LMM_EntityLittleMaid pEntity) {
 		super(pEntity);
-		helper = new StrategyUserHelper<>(new EscorterDKDelegate(this));
-		helper.add(new FreedomDKDelegate(this));
+		helpers = new StrategyUserHelperSet();
+		{
+
+			StrategyUserHelper<DoorActivateStrategy> subHelper = new StrategyUserHelper<>(new DoorCloseStrategy(this));
+			subHelper.add(new MasterLookingDoorOpenStrategy(this));
+			helper = new StrategyUserHelper<>(new EscorterDKDelegate(this, subHelper));
+			subHelper.addDependencyStrategy(helper);
+			helpers.add(subHelper);
+		}
+		{
+			StrategyUserHelper<LeverActivateStrategy> subHelper = new StrategyUserHelper<>(
+					new DefaultLeverActivateStrategy(this));
+			subHelper.add(new LeverOnStrategy(this));
+			subHelper.add(new LeverOffStrategy(this));
+			helper.add(new FreedomDKDelegate(this, subHelper));
+			subHelper.addDependencyStrategy(helper);
+			helpers.add(subHelper);
+		}
+		helpers.add(helper);
 	}
 
 	@Override
@@ -86,7 +112,12 @@ public class LMM_EntityMode_DoorKeeper extends LMM_EntityModeBaseEx {
 	@Override
 	public void init() {
 		// 登録モードの名称追加
-		addLocalization(MODE_NAME);
+		addLocalization(MODE_NAME, new JPNameProvider() {
+			@Override
+			public String getLocalization() {
+				return "門番";
+			}
+		});
 		LMM_EntityMode_AcceptBookCommand.add(new ModeAlias(MODE_ID, MODE_NAME, "Dk"));
 	}
 
@@ -98,20 +129,9 @@ public class LMM_EntityMode_DoorKeeper extends LMM_EntityModeBaseEx {
 	@Override
 	public void onUpdate(int pMode) {
 		if (pMode == MODE_ID) {
-			strategyChanged = strategyChanged | helper.updateCurrentStrategy();
+			helper.updateCurrentStrategy();
 			helper.getCurrentStrategy().onUpdateStrategy();
 		}
-	}
-
-	@Override
-	public TaskState onValidateTask(LMM_EntityLittleMaid maid, int maidMode) {
-		if (maidMode == MODE_ID) {
-			if (strategyChanged | getCurrentStrategy().updateCurrentStrategy()) {
-				strategyChanged = false;
-				return TaskState.BREAK;
-			}
-		}
-		return TaskState.CONTINUE;
 	}
 
 	@Override

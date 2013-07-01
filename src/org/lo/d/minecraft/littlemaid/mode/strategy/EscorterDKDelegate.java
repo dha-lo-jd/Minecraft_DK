@@ -3,11 +3,10 @@ package org.lo.d.minecraft.littlemaid.mode.strategy;
 import net.minecraft.src.LMM_EntityLittleMaid;
 import net.minecraft.src.LMM_EntityMode_DoorKeeper;
 
-public class EscorterDKDelegate extends DKDelegate.Impl<DoorActivateStrategy> implements DKDelegate {
+public class EscorterDKDelegate extends DKDelegate.Impl<DoorActivateStrategy> {
 
-	public EscorterDKDelegate(LMM_EntityMode_DoorKeeper mode) {
-		super(mode, new DoorCloseStrategy(mode));
-		helper.add(new MasterLookingDoorOpenStrategy(mode));
+	public EscorterDKDelegate(LMM_EntityMode_DoorKeeper mode, StrategyUserHelper<DoorActivateStrategy> subHelper) {
+		super(mode, subHelper);
 	}
 
 	@Override

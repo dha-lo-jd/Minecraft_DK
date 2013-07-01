@@ -7,8 +7,8 @@ import net.minecraft.src.LMM_EntityMode_DoorKeeper;
 
 import org.lo.d.commons.coords.Point3D;
 
-public interface DoorActivateStrategy extends Strategy {
-	public abstract class Impl extends Strategy.DefaultImpl implements DoorActivateStrategy {
+public interface DoorActivateStrategy extends DependencyStrategy {
+	public abstract class Impl extends DependencyStrategy.DefaultImpl implements DoorActivateStrategy {
 		protected final LMM_EntityMode_DoorKeeper doorKeeper;
 
 		protected Point3D target = null;
@@ -39,6 +39,12 @@ public interface DoorActivateStrategy extends Strategy {
 				return true;
 			}
 			return false;
+		}
+
+		@Override
+		public void notifyDependencyStrategyChanged() {
+			stopStrategy();
+			onChangeStrategy();
 		}
 
 		@Override

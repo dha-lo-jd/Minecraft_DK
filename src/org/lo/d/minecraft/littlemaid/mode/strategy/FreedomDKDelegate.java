@@ -5,12 +5,10 @@ import net.minecraft.src.LMM_EntityMode_DoorKeeper;
 
 import org.lo.d.minecraft.littlemaid.mode.LMMModeExHandler.TaskState;
 
-public class FreedomDKDelegate extends DKDelegate.Impl<LeverActivateStrategy> implements DKDelegate {
+public class FreedomDKDelegate extends DKDelegate.Impl<LeverActivateStrategy> {
 
-	public FreedomDKDelegate(LMM_EntityMode_DoorKeeper mode) {
-		super(mode, new DefaultLeverActivateStrategy(mode));
-		helper.add(new LeverOnStrategy(mode));
-		helper.add(new LeverOffStrategy(mode));
+	public FreedomDKDelegate(LMM_EntityMode_DoorKeeper mode, StrategyUserHelper<LeverActivateStrategy> subHelper) {
+		super(mode, subHelper);
 	}
 
 	@Override
@@ -35,7 +33,7 @@ public class FreedomDKDelegate extends DKDelegate.Impl<LeverActivateStrategy> im
 
 	@Override
 	public boolean shouldStrategy() {
-		return !mode.owner.isTracer() && mode.owner.isFreedom();
+		return mode.owner.isFreedom();
 	}
 
 	@Override

@@ -8,6 +8,7 @@ import org.lo.d.commons.configuration.ConfigurationSupport;
 import org.lo.d.commons.configuration.ConfigurationSupport.IntConfig;
 
 import cpw.mods.fml.common.Mod;
+import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 
@@ -18,6 +19,10 @@ public class DoorKeeper {
 
 	@IntConfig(defaultValue = 60, name = "waitMargin")
 	public static int waitMargin;
+
+	@Mod.Init
+	public void init(FMLInitializationEvent event) {
+	}
 
 	@Mod.PreInit
 	public void preInit(FMLPreInitializationEvent event) throws IllegalArgumentException, IllegalAccessException,

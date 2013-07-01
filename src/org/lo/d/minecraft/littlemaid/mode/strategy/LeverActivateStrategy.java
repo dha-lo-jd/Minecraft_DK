@@ -12,9 +12,9 @@ import org.lo.d.minecraft.littlemaid.mode.LMMModeExHandler.TaskState;
 
 import com.google.common.collect.Sets;
 
-public interface LeverActivateStrategy extends Strategy {
+public interface LeverActivateStrategy extends DependencyStrategy {
 
-	public abstract class Impl extends Strategy.DefaultImpl implements LeverActivateStrategy {
+	public abstract class Impl extends DependencyStrategy.DefaultImpl implements LeverActivateStrategy {
 		protected final LMM_EntityMode_DoorKeeper doorKeeper;
 
 		protected Point3D target = null;
@@ -53,6 +53,12 @@ public interface LeverActivateStrategy extends Strategy {
 		@Override
 		public TaskState handleHealthUpdate(LMM_EntityLittleMaid maid, int maidMode, byte par1) {
 			return null;
+		}
+
+		@Override
+		public void notifyDependencyStrategyChanged() {
+			stopStrategy();
+			onChangeStrategy();
 		}
 
 		@Override
