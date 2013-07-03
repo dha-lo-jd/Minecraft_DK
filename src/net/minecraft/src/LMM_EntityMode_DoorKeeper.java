@@ -27,6 +27,7 @@ import org.lo.d.minecraft.littlemaid.mode.strategy.StrategyUserHelperSet;
 
 import com.google.common.collect.Lists;
 
+@LittleMaidModeConfiguration
 public class LMM_EntityMode_DoorKeeper extends LMM_EntityModeBaseEx {
 	public enum State {
 		TO_OPEN, TO_CLOSE, WAIT,
@@ -129,7 +130,7 @@ public class LMM_EntityMode_DoorKeeper extends LMM_EntityModeBaseEx {
 	@Override
 	public void onUpdate(int pMode) {
 		if (pMode == MODE_ID) {
-			helper.updateCurrentStrategy();
+			helpers.updateCurrentStrategy();
 			helper.getCurrentStrategy().onUpdateStrategy();
 		}
 	}
