@@ -56,7 +56,7 @@ public class MasterLookingDoorOpenStrategy extends DoorActivateStrategy.Impl {
 			vec3 = vec3.addVector(0, player.getEyeHeight(), 0);
 			Vec3 vec31 = player.getLook(rpt);
 			Vec3 vec32 = vec3.addVector(vec31.xCoord * distance, vec31.yCoord * distance, vec31.zCoord * distance);
-			mop = player.worldObj.rayTraceBlocks(vec3, vec32);
+			mop = player.worldObj.clip(vec3, vec32);
 		}
 		if (mop != null && mop.typeOfHit == EnumMovingObjectType.TILE) {
 			return new Point3D(mop.blockX, mop.blockY, mop.blockZ);

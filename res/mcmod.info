@@ -1,0 +1,14 @@
+{
+  "modinfoversion": 2,
+  "modlist": [{
+    "modid": "LMM_EntityMode_DoorKeeper",
+    "name": "LMM Mode DoorKeeper",
+    "version": "0.0.2",
+    "mcversion": "1.6.2",
+    "authors": [ "dhs_lo_jd" ],
+    "parent": "LMMExtension",
+    "requiredMods": [ "LMMExtension" ],
+    "dependencies": [ "LMMExtension" ],
+    "useDependencyInformation": "true"
+  }]
+}
